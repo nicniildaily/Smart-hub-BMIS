@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beauty Hub - Home</title>
+    <link rel="stylesheet" href="css/profile.css" />
+</head>
+<body>
+    <header>
+        <h1>Beauty Hub</h1>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="appointment.html">Appointments</a>
+            <a href="billing.html">Billing</a>
+            <a href="marketing.html">Marketing</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+    <section class="hero">
+        <h2>Welcome to Beauty Hub</h2>
+        <p>Your one-stop solution for managing appointments, employees, inventory, billing, and marketing for salons and spas.</p>
+    </section>
+    <main>
+        <h3>Create Your Profile</h3>
+        <form id="profile-form">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+
+            <button type="submit" class="btn">Create Profile</button>
+        </form>
+
+        <h3>Login</h3>
+        <form id="login-form">
+            <label for="login-email">Email Address:</label>
+            <input type="email" id="login-email" name="login-email" required />
+
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" name="login-password" required />
+
+            <button type="submit" class="btn">Log In</button>
+        </form>
+    </main>
+    <footer>
+        &copy; 2025 Beauty Hub. All rights reserved.
+    </footer>
+    <script type="module">
+      import fetchApi from '../helpers/fetchApi.js';
+
+      const form = document.getElementById('profile-form');
+      const loginForm = document.getElementById('login-form');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const formData = {
+          name: form.name.value,
+          email: form.email.value,
+          phone: form.phone.value,
+          password: form.password.value,
+        };
+
+        try {
+          const response = await fetchApi('api/users', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+
+          // alert('Profile created successfully!');
+          form.reset();
+          window.location.href = '../profile/profilepage.html';
+        } catch (error) {
+          alert('Error creating profile: ' + (error.error || 'Unknown error'));
+        }
+      });
+
+      loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const loginData = {
+          email: loginForm['login-email'].value,
+          password: loginForm['login-password'].value,
+        };
+
+        try {
+          const response = await fetchApi('api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(loginData),
+          });
+
+          // Store JWT token in localStorage
+          localStorage.setItem('token', response.token);
+
+          alert('Login successful! Welcome ' + response.userName);
+          window.location.href = '../profile/profilepage.html';
+        } catch (error) {
+          console.error('Login error:', error);
+          alert('Login failed: ' + (error.error || 'Unknown error'));
+        }
+      });
+    </script>
+</body>
+</html>
