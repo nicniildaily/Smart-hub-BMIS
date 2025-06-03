@@ -153,3 +153,60 @@ footer {
 .cta .btn:hover {
     background: #a0274a;
 }
+
+/* New styles for appointment page additions */
+
+.appointment-schedules ul,
+.plans ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.appointment-schedules li,
+.plans li {
+    background: white;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(214, 51, 108, 0.2);
+}
+
+.booking form {
+    background: #ffe6f0;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.booking label {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #d6336c;
+}
+
+.booking input,
+.booking select {
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid #d6336c;
+    border-radius: 4px;
+}
+
+.booking button {
+    margin-top: 1.5rem;
+    background: #d6336c;
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 25px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.booking button:hover {
+    background: #a0274a;
+}
