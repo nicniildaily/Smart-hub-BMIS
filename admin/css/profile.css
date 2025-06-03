@@ -1,0 +1,22 @@
+/* Existing styles for profile page */
+
+.clients-section {
+  margin-top: 2rem;
+}
+
+.clients-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+}
+
+.clients-table th,
+.clients-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.clients-table th {
+  background-color: #f2f2f2;
+}
