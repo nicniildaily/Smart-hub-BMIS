@@ -29,14 +29,14 @@ nav a:hover {
     color: #ffe6f0;
 }
 .hero {
-    background: url('../../public/backgroundimages/b.png') no-repeat center center/cover;
-    height: 400px;
+    background: none;
+    height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    color: #d6336c;
+    text-shadow: none;
     text-align: center;
     padding: 0 1rem;
 }
