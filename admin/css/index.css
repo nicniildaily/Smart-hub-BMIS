@@ -1,146 +1,37 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    background: #fff0f6;
-    color: #333;
-}
-header {
-    background: #ff66b2;
-    padding: 1rem 2rem;
-    color: white;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-header h1 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 1.8rem;
-}
-nav a {
-    color: white;
-    text-decoration: none;
-    margin-left: 1.5rem;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: color 0.3s ease;
-}
-nav a:hover {
-    color: #ffe6f0;
-}
-.hero {
-    background: url('../public/backgroundimages/b.png') no-repeat center center/cover;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    flex-direction: column;
     text-align: center;
-    padding: 0 1rem;
-}
-.hero h2 {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-}
-.hero p {
-    font-size: 1.2rem;
-    max-width: 600px;
-}
-main {
-    padding: 2rem;
-    max-width: 900px;
-    margin: 0 auto;
-}
-footer {
-    text-align: center;
-    padding: 1rem;
-    background: #ff66b2;
-    color: white;
-    margin-top: 3rem;
-}
-
-.features {
-    background: #ffe6f0;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  button {
     padding: 1rem 2rem;
-    margin-top: 2rem;
-    border-radius: 8px;
-}
-
-.features h4 {
-    margin-top: 0;
-    color: #d6336c;
-}
-
-.features ul {
-    list-style-type: disc;
-    padding-left: 1.5rem;
-}
-
-.features ul li {
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.showcase {
-    margin-top: 2rem;
-}
-
-.spot-list {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.spot {
-    background: white;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 6px rgba(214, 51, 108, 0.2);
-    flex: 1 1 30%;
-    min-width: 250px;
-}
-
-.spot h5 {
-    margin-top: 0;
-    color: #d6336c;
-}
-
-.testimonials {
-    background: #ffe6f0;
-    margin-top: 2rem;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    font-style: italic;
-    color: #6a1b4d;
-}
-
-.testimonials blockquote {
-    margin: 0 0 1rem 0;
-}
-
-.cta {
-    margin-top: 2rem;
-    text-align: center;
-}
-
-.cta h4 {
-    color: #d6336c;
-}
-
-.cta .btn {
-    display: inline-block;
-    background: #d6336c;
+    font-size: 1.25rem;
+    background-color: #007bff;
     color: white;
-    padding: 0.75rem 1.5rem;
-    margin: 0.5rem;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 700;
-    transition: background 0.3s ease;
-}
-
-.cta .btn:hover {
-    background: #a0274a;
-}
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  .login-link {
+    margin-top: 1rem;
+  }
+  .login-link a {
+    font-size: 1rem;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
