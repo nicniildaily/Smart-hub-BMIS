@@ -6,6 +6,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const adminAuthRouter = require('./routes/adminAuth');
 const requireAuth = require('./middleware/requireAuth');
 
 const app = express();
@@ -65,6 +66,9 @@ app.use((req, res, next) => {
 
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/admin/auth', adminAuthRouter);
+const adminRouter = require('./routes/admin');
+app.use('/api/admin', adminRouter);
 
 // Basic route for testing
 app.get('/', (req, res) => {
