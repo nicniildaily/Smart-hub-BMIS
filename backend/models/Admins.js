@@ -43,7 +43,7 @@ const Admins = sequelize.define(
         },
         pin: {
             type: DataTypes.INTEGER(),
-            allowNull: false,
+            allowNull: true,
         },
         email: {
             type: DataTypes.STRING(255),
