@@ -1,0 +1,108 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: #fff0f6;
+    color: #333;
+}
+
+header {
+    background: #ff66b2;
+    padding: 1rem 2rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #ffe6f0;
+}
+
+.hero {
+    background: url('../../public/backgroundimages/b.png') no-repeat center center/cover;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.hero h2 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+}
+
+main {
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #ff66b2;
+    color: white;
+    margin-top: 3rem;
+}
+
+form {
+    background: #ffe6f0;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #d6336c;
+}
+
+input {
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid #d6336c;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 1.5rem;
+    background: #d6336c;
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 25px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #a0274a;
+}
