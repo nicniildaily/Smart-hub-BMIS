@@ -107,6 +107,45 @@ footer {
     color: #d6336c;
 }
 
+.salon-showcase {
+    margin-top: 2rem;
+}
+
+.salon-list {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.salon {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(214, 51, 108, 0.2);
+    flex: 1 1 30%;
+    min-width: 250px;
+    text-align: center;
+}
+
+.salon img {
+    max-width: 80%;
+    height: auto;
+    border-radius: 8px;
+    margin: 0 auto;
+    display: block;
+}
+
+.salon h5 {
+    margin-top: 0.5rem;
+    color: #d6336c;
+}
+
+.salon p {
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: #6a1b4d;
+}
+
 .testimonials {
     background: #ffe6f0;
     margin-top: 2rem;
