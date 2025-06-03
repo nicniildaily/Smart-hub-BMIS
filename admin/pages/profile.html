@@ -3,52 +3,49 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Beauty Hub - Home</title>
+    <title>Beauty Hub - Admin Profile</title>
     <link rel="stylesheet" href="css/profile.css" />
 </head>
 <body>
     <header>
-        <h1>Beauty Hub</h1>
+        <h1>Beauty Hub - Admin</h1>
         <nav>
             <a href="home.html">Home</a>
             <a href="appointment.html">Appointments</a>
-            <a href="billing.html">Billing</a>
-            <a href="marketing.html">Marketing</a>
+            <a href="inventory.html">Inventory</a>
             <a href="profile.html">Profile</a>
         </nav>
     </header>
     <section class="hero">
-        <h2>Welcome to Beauty Hub</h2>
-        <p>Your one-stop solution for managing appointments, employees, inventory, billing, and marketing for salons and spas.</p>
+        <h2>Welcome to Beauty Hub Admin Panel</h2>
+        <p>Manage your business appointments, employees, inventory, billing, and marketing.</p>
     </section>
     <main>
-        <h3>Create Your Profile</h3>
-        <form id="profile-form">
-            <label for="name">Full Name:</label>
-            <input type="text" id="name" name="name" required />
-
-            <label for="email">Email Address:</label>
-            <input type="email" id="email" name="email" required />
-
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required />
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required />
-
-            <button type="submit" class="btn">Create Profile</button>
-        </form>
-
-        <h3>Login</h3>
-        <form id="login-form">
-            <label for="login-email">Email Address:</label>
-            <input type="email" id="login-email" name="login-email" required />
-
-            <label for="login-password">Password:</label>
-            <input type="password" id="login-password" name="login-password" required />
-
-            <button type="submit" class="btn">Log In</button>
-        </form>
+        <section id="business-details-section" aria-labelledby="business-details-heading">
+            <h3 id="business-details-heading">Business Details</h3>
+            <p><strong>Business Name:</strong> <span id="business-name"></span></p>
+            <p><strong>Email:</strong> <span id="business-email"></span></p>
+            <p><strong>Address:</strong> <span id="business-address"></span></p>
+            <p><strong>Phone Number:</strong> <span id="business-phone"></span></p>
+            <p><strong>Admin Name:</strong> <span id="admin-name"></span></p>
+            <p><strong>Total Customers:</strong> <span id="total-customers"></span></p>
+        </section>
+        <section id="clients-section" aria-labelledby="clients-heading" class="clients-section">
+            <h3 id="clients-heading">Clients</h3>
+            <table id="clients-table" class="clients-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody id="clients-tbody">
+                    <!-- Clients data will be inserted here -->
+                </tbody>
+            </table>
+        </section>
     </main>
     <footer>
         &copy; 2025 Beauty Hub. All rights reserved.
@@ -56,63 +53,73 @@
     <script type="module">
       import fetchApi from '../helpers/fetchApi.js';
 
-      const form = document.getElementById('profile-form');
-      const loginForm = document.getElementById('login-form');
-
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const formData = {
-          name: form.name.value,
-          email: form.email.value,
-          phone: form.phone.value,
-          password: form.password.value,
-        };
-
+      // Fetch and display business details and total customers
+      async function loadBusinessDetails() {
         try {
-          const response = await fetchApi('api/users', {
-            method: 'POST',
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+
+          const response = await fetchApi('api/admin/business-details', {
             headers: {
-              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token,
             },
-            body: JSON.stringify(formData),
           });
 
-          // alert('Profile created successfully!');
-          form.reset();
-          window.location.href = '../profile/profilepage.html';
+          const { businessDetails, totalCustomers } = response;
+
+          document.getElementById('business-name').textContent = businessDetails.company_name;
+          document.getElementById('business-email').textContent = businessDetails.email;
+          document.getElementById('business-address').textContent = businessDetails.adress;
+          document.getElementById('business-phone').textContent = businessDetails.phone_number;
+          document.getElementById('admin-name').textContent = businessDetails.name;
+          document.getElementById('total-customers').textContent = totalCustomers;
+
+          document.getElementById('business-details-section').style.display = 'block';
         } catch (error) {
-          alert('Error creating profile: ' + (error.error || 'Unknown error'));
+          console.error('Failed to load business details:', error);
         }
-      });
+      }
 
-      loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const loginData = {
-          email: loginForm['login-email'].value,
-          password: loginForm['login-password'].value,
-        };
-
+      // Fetch and display clients
+      async function loadClients() {
         try {
-          const response = await fetchApi('api/auth/login', {
-            method: 'POST',
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+
+          const clients = await fetchApi('api/admin/clients', {
             headers: {
-              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token,
             },
-            body: JSON.stringify(loginData),
           });
 
-          // Store JWT token in localStorage
-          localStorage.setItem('token', response.token);
+          const tbody = document.getElementById('clients-tbody');
+          tbody.innerHTML = '';
 
-          alert('Login successful! Welcome ' + response.userName);
-          window.location.href = '../profile/profilepage.html';
+          clients.forEach(client => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${client.id}</td>
+              <td>${client.full_name}</td>
+              <td>${client.email}</td>
+              <td>${client.phone}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+
+          document.getElementById('clients-section').style.display = 'block';
         } catch (error) {
-          console.error('Login error:', error);
-          alert('Login failed: ' + (error.error || 'Unknown error'));
+          console.error('Failed to load clients:', error);
         }
-      });
+      }
+
+      loadBusinessDetails();
+      loadClients();
     </script>
 </body>
 </html>
