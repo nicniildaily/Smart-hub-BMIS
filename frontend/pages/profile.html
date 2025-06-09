@@ -22,56 +22,97 @@
         <p>Your one-stop solution for managing appointments, employees, inventory, billing, and marketing for salons and spas.</p>
     </section>
     <main>
-        <h3>Discover Our Services</h3>
-        <p>Explore our comprehensive tools designed to streamline your beauty business operations and enhance customer satisfaction.</p>
+        <h3>Create Your Profile</h3>
+        <form id="profile-form">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required />
 
-        <section class="features">
-            <h4>Why Choose Beauty Hub?</h4>
-            <ul>
-                <li>Easy appointment scheduling for customers</li>
-                <li>Efficient employee and inventory management</li>
-                <li>Secure billing and financial reporting</li>
-                <li>Effective marketing tools to grow your business</li>
-                <li>Showcase your salon or spa to attract more customers</li>
-            </ul>
-        </section>
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required />
 
-        <section class="showcase">
-            <h4>Featured Beauty Spots</h4>
-            <div class="spot-list">
-                <article class="spot">
-                    <h5>Elegant Salon</h5>
-                    <p>Experience luxury hair and beauty treatments in a relaxing environment.</p>
-                </article>
-                <article class="spot">
-                    <h5>Glow Spa</h5>
-                    <p>Rejuvenate your body and mind with our exclusive spa services.</p>
-                </article>
-                <article class="spot">
-                    <h5>Radiance Beauty</h5>
-                    <p>Professional skincare and makeup services for every occasion.</p>
-                </article>
-            </div>
-        </section>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required />
 
-        <section class="testimonials">
-            <h4>What Our Customers Say</h4>
-            <blockquote>
-                "Beauty Hub made booking my appointments so easy and convenient!" - Sarah L.
-            </blockquote>
-            <blockquote>
-                "The employee management tools helped our salon run smoothly." - James K.
-            </blockquote>
-        </section>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
 
-        <section class="cta">
-            <h4>Ready to Enhance Your Beauty Business?</h4>
-            <a href="pages/appointment.html" class="btn">Book an Appointment</a>
-            <a href="pages/profile.html" class="btn">Create Your Profile</a>
-        </section>
+            <button type="submit" class="btn">Create Profile</button>
+        </form>
+
+        <h3>Login</h3>
+        <form id="login-form">
+            <label for="login-email">Email Address:</label>
+            <input type="email" id="login-email" name="login-email" required />
+
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" name="login-password" required />
+
+            <button type="submit" class="btn">Log In</button>
+        </form>
     </main>
     <footer>
         &copy; 2025 Beauty Hub. All rights reserved.
     </footer>
+    <script type="module">
+      import fetchApi from '../helpers/fetchApi.js';
+
+      const form = document.getElementById('profile-form');
+      const loginForm = document.getElementById('login-form');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const formData = {
+          name: form.name.value,
+          email: form.email.value,
+          phone: form.phone.value,
+          password: form.password.value,
+        };
+
+        try {
+          const response = await fetchApi('api/users', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+
+          // alert('Profile created successfully!');
+          form.reset();
+          window.location.href = '../profile/profilepage.html';
+        } catch (error) {
+          alert('Error creating profile: ' + (error.error || 'Unknown error'));
+        }
+      });
+
+      loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const loginData = {
+          email: loginForm['login-email'].value,
+          password: loginForm['login-password'].value,
+        };
+
+        try {
+          const response = await fetchApi('api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(loginData),
+          });
+
+          // Store JWT token in localStorage
+          localStorage.setItem('token', response.token);
+
+          alert('Login successful! Welcome ' + response.userName);
+          window.location.href = '../profile/profilepage.html';
+        } catch (error) {
+          console.error('Login error:', error);
+          alert('Login failed: ' + (error.error || 'Unknown error'));
+        }
+      });
+    </script>
 </body>
 </html>

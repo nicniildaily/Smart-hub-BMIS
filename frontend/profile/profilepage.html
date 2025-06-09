@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beauty Hub - Profile</title>
+    <link rel="stylesheet" href="profile.css" />
+</head>
+<body>
+    <header>
+        <h1>Beauty Hub</h1>
+        <nav>
+            <a href="/frontend/pages/home.html">Home</a>
+            <a href="/frontend/pages/appointment.html">Appointments</a>
+            <a href="/frontend/pages/billing.html">Billing</a>
+            <a href="/frontend/pages/marketing.html">Marketing</a>
+            <a href="/frontend/pages/profile.html">Profile</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Your Profile</h2>
+        <div id="profile-info">
+            <p><strong>Name:</strong> <span id="profile-name"></span></p>
+            <p><strong>Email:</strong> <span id="profile-email"></span></p>
+            <p><strong>Phone:</strong> <span id="profile-phone"></span></p>
+        </div>
+    </main>
+    <footer>
+        &copy; 2025 Beauty Hub. All rights reserved.
+    </footer>
+    <script type="module">
+      import fetchApi from '../helpers/fetchApi.js';
+
+      async function loadProfile() {
+        try {
+          const profile = await fetchApi('api/users/profile');
+          document.getElementById('profile-name').textContent = profile.full_name;
+          document.getElementById('profile-email').textContent = profile.email;
+          document.getElementById('profile-phone').textContent = profile.phone;
+        } catch (error) {
+          alert('Failed to load profile: ' + (error.error || 'Unknown error'));
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>
