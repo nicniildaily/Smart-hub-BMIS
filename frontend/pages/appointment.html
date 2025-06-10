@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beauty Hub - Appointments</title>
+    <link rel="stylesheet" href="css/appointment.css" />
+</head>
+<body>
+    <header>
+        <h1>Beauty Hub</h1>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="appointment.html">Appointments</a>
+            <a href="billing.html">Billing</a>
+            <a href="marketing.html">Marketing</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+    <section class="hero">
+        <h2>Welcome to Beauty Hub</h2>
+        <p>Your one-stop solution for managing appointments, employees, inventory, billing, and marketing for salons and spas.</p>
+    </section>
+    <main>
+        <h3>Appointment Schedules</h3>
+        <section class="appointment-schedules">
+            <p>View your upcoming appointments below:</p>
+            <ul>
+                <li>Monday, June 10 - 10:00 AM - Haircut with Elegant Salon</li>
+                <li>Wednesday, June 12 - 2:00 PM - Spa treatment at Glow Spa</li>
+                <li>Friday, June 14 - 11:00 AM - Facial at Radiance Beauty</li>
+            </ul>
+        </section>
+
+        <h3>Plans</h3>
+        <section class="plans">
+            <p>Choose a plan that suits your beauty needs:</p>
+            <ul>
+                <li>Basic Plan - Includes 1 appointment per month</li>
+                <li>Standard Plan - Includes 3 appointments per month</li>
+                <li>Premium Plan - Unlimited appointments</li>
+            </ul>
+        </section>
+
+        <h3>Book an Appointment</h3>
+        <section class="booking">
+            <form id="booking-form">
+                <label for="service">Select Service:</label>
+                <select id="service" name="service" required>
+                    <option value="">--Please choose an option--</option>
+                    <option value="haircut">Haircut</option>
+                    <option value="spa">Spa Treatment</option>
+                    <option value="facial">Facial</option>
+                </select>
+
+                <label for="date">Select Date:</label>
+                <input type="date" id="date" name="date" required />
+
+                <label for="time">Select Time:</label>
+                <input type="time" id="time" name="time" required />
+
+                <button type="submit" class="btn">Book Now</button>
+            </form>
+        </section>
+
+        <section class="cta">
+            <h4>Create a Profile to Manage Your Appointments</h4>
+            <a href="profile.html" class="btn">Create Your Profile</a>
+        </section>
+    </main>
+    <footer>
+        &copy; 2025 Beauty Hub. All rights reserved.
+    </footer>
+</body>
+</html>

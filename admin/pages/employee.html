@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beauty Hub - Employee Management</title>
+    <link rel="stylesheet" href="css/profile.css" />
+    <link rel="stylesheet" href="css/employee-management.css" />
+</head>
+<body>
+    <header>
+        <h1>Beauty Hub</h1>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="employee.html">Employee</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+    <section class="hero">
+        <h2>Employee Management</h2>
+        <p>Manage your employees efficiently here.</p>
+    </section>
+    <main>
+        <section id="employee-management" aria-labelledby="employee-management-heading">
+            <h3 id="employee-management-heading">Employee Management</h3>
+            <table id="employee-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Position</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employee-table-body">
+                    <!-- Employee rows will be populated here -->
+                </tbody>
+            </table>
+
+            <h4>Add / Edit Employee</h4>
+            <form id="employee-form">
+                <input type="hidden" id="employee-id" name="employee-id" />
+                <label for="full_name">Full Name:</label>
+                <input type="text" id="full_name" name="full_name" required />
+                <br />
+                <label for="position">Position:</label>
+                <input type="text" id="position" name="position" required />
+                <br />
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" />
+                <br />
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" />
+                <br />
+                <button type="submit" id="submit-button">Add Employee</button>
+                <button type="button" id="cancel-button">Cancel</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        &copy; 2025 Beauty Hub. All rights reserved.
+    </footer>
+    <script type="module">
+      import fetchApi from '../helpers/fetchApi.js';
+
+      // Fetch and display employee list
+      async function loadEmployees() {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+          const employees = await fetchApi('api/admin/employees', {
+            headers: {
+              'Authorization': 'Bearer ' + token,
+            },
+          });
+          const tbody = document.getElementById('employee-table-body');
+          tbody.innerHTML = '';
+          employees.forEach(emp => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${emp.id}</td>
+              <td>${emp.full_name}</td>
+              <td>${emp.position}</td>
+              <td>${emp.phone || ''}</td>
+              <td>${emp.email || ''}</td>
+              <td>
+                <button data-id="${emp.id}" class="edit-btn">Edit</button>
+                <button data-id="${emp.id}" class="delete-btn">Delete</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+          addEmployeeTableEventListeners();
+        } catch (error) {
+          console.error('Failed to load employees:', error);
+        }
+      }
+
+      function addEmployeeTableEventListeners() {
+        document.querySelectorAll('.edit-btn').forEach(button => {
+          button.addEventListener('click', async (event) => {
+            const id = event.target.getAttribute('data-id');
+            await editEmployee(id);
+          });
+        });
+        document.querySelectorAll('.delete-btn').forEach(button => {
+          button.addEventListener('click', async (event) => {
+            const id = event.target.getAttribute('data-id');
+            if (confirm('Are you sure you want to delete this employee?')) {
+              await deleteEmployee(id);
+            }
+          });
+        });
+      }
+
+      async function editEmployee(id) {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+          const employee = await fetchApi(`api/admin/employees/${id}`, {
+            headers: {
+              'Authorization': 'Bearer ' + token,
+            },
+          });
+          document.getElementById('employee-id').value = employee.id;
+          document.getElementById('full_name').value = employee.full_name;
+          document.getElementById('position').value = employee.position;
+          document.getElementById('phone').value = employee.phone || '';
+          document.getElementById('email').value = employee.email || '';
+          document.getElementById('submit-button').textContent = 'Update Employee';
+          document.getElementById('cancel-button').style.display = 'inline';
+        } catch (error) {
+          console.error('Failed to fetch employee:', error);
+        }
+      }
+
+      async function deleteEmployee(id) {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+          await fetchApi(`api/admin/employees/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+            },
+          });
+          await loadEmployees();
+        } catch (error) {
+          console.error('Failed to delete employee:', error);
+        }
+      }
+
+      document.getElementById('employee-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No admin token found');
+          return;
+        }
+        const id = document.getElementById('employee-id').value;
+        const full_name = document.getElementById('full_name').value;
+        const position = document.getElementById('position').value;
+        const phone = document.getElementById('phone').value;
+        const email = document.getElementById('email').value;
+
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `api/admin/employees/${id}` : 'api/admin/employees';
+
+        try {
+          await fetchApi(url, {
+            method,
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ full_name, position, phone, email }),
+          });
+          document.getElementById('employee-form').reset();
+          document.getElementById('employee-id').value = '';
+          document.getElementById('submit-button').textContent = 'Add Employee';
+          document.getElementById('cancel-button').style.display = 'none';
+          await loadEmployees();
+        } catch (error) {
+          console.error('Failed to save employee:', error);
+        }
+      });
+
+      document.getElementById('cancel-button').addEventListener('click', (event) => {
+        event.preventDefault();
+        document.getElementById('employee-form').reset();
+        document.getElementById('employee-id').value = '';
+        document.getElementById('submit-button').textContent = 'Add Employee';
+        document.getElementById('cancel-button').style.display = 'none';
+      });
+
+      loadEmployees();
+    </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beauty Hub - Admin Profile</title>
+    <link rel="stylesheet" href="css/profile.css" />
+</head>
+<body>
+    <header>
+        <h1>Beauty Hub - Admin</h1>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="appointment.html">Appointments</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+    <section class="hero">
+        <h2>Welcome to Beauty Hub Admin Panel</h2>
+        <p>Manage your business appointments, employees, inventory, billing, and marketing.</p>
+    </section>
+    <main>
+        <section id="business-details-section" aria-labelledby="business-details-heading">
+            <h3 id="business-details-heading">Business Details</h3>
+            <p><strong>Business Name:</strong> <span id="business-name"></span></p>
+            <p><strong>Email:</strong> <span id="business-email"></span></p>
+            <p><strong>Address:</strong> <span id="business-address"></span></p>
+            <p><strong>Phone Number:</strong> <span id="business-phone"></span></p>
+            <p><strong>Admin Name:</strong> <span id="admin-name"></span></p>
+            <p><strong>Total Customers:</strong> <span id="total-customers"></span></p>
+        </section>
+        <section id="clients-section" aria-labelledby="clients-heading" class="clients-section">
+            <h3 id="clients-heading">Clients</h3>
+            <table id="clients-table" class="clients-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody id="clients-tbody">
+                    <!-- Clients data will be inserted here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        &copy; 2025 Beauty Hub. All rights reserved.
+    </footer>
+    <script type="module">
+      import fetchApi from '../helpers/fetchApi.js';
+
+      // Fetch and display business details and total customers
+      async function loadBusinessDetails() {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+
+          const response = await fetchApi('api/admin/business-details', {
+            headers: {
+              'Authorization': 'Bearer ' + token,
+            },
+          });
+
+          const { businessDetails, totalCustomers } = response;
+
+          document.getElementById('business-name').textContent = businessDetails.company_name;
+          document.getElementById('business-email').textContent = businessDetails.email;
+          document.getElementById('business-address').textContent = businessDetails.adress;
+          document.getElementById('business-phone').textContent = businessDetails.phone_number;
+          document.getElementById('admin-name').textContent = businessDetails.name;
+          document.getElementById('total-customers').textContent = totalCustomers;
+
+          document.getElementById('business-details-section').style.display = 'block';
+        } catch (error) {
+          console.error('Failed to load business details:', error);
+        }
+      }
+
+      // Fetch and display clients
+      async function loadClients() {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+
+          const clients = await fetchApi('api/admin/clients', {
+            headers: {
+              'Authorization': 'Bearer ' + token,
+            },
+          });
+
+          const tbody = document.getElementById('clients-tbody');
+          tbody.innerHTML = '';
+
+          clients.forEach(client => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${client.id}</td>
+              <td>${client.full_name}</td>
+              <td>${client.email}</td>
+              <td>${client.phone}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+
+          document.getElementById('clients-section').style.display = 'block';
+        } catch (error) {
+          console.error('Failed to load clients:', error);
+        }
+      }
+
+      loadBusinessDetails();
+      loadClients();
+    </script>
+</body>
+</html>

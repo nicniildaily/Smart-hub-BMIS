@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Sign In</title>
+  <link rel="stylesheet" href="css/signin.css" />
+</head>
+<body>
+  <div class="modal">
+    <div class="modal-content">
+  <h2>Business Sign Up</h2>
+  <form id="signupForm">
+    <label for="company_name">Business Name</label>
+    <input type="text" id="company_name" name="company_name" required />
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required />
+    <label for="adress">Address</label>
+    <input type="text" id="adress" name="adress" required />
+    <label for="phone_number">Phone Number</label>
+    <input type="tel" id="phone_number" name="phone_number" required />
+    <label for="name">Admin Name</label>
+    <input type="text" id="name" name="name" required />
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required />
+    <button type="submit" id="signupButton">Sign Up</button>
+    <div class="error-message" id="errorMessage"></div>
+  </form>
+    </div>
+  </div>
+
+  <script>
+    const signupForm = document.getElementById('signupForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const signupButton = document.getElementById('signupButton');
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMessage.textContent = '';
+      signupButton.disabled = true;
+
+      const company_name = signupForm.company_name.value.trim();
+      const email = signupForm.email.value.trim();
+      const adress = signupForm.adress.value.trim();
+      const phone_number = signupForm.phone_number.value.trim();
+      const name = signupForm.name.value.trim();
+      const password = signupForm.password.value.trim();
+
+      try {
+        const response = await fetch('http://localhost:5000/api/admin/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ company_name, email, adress, phone_number, name, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('Sign Up successful! Please login.');
+          window.location.href = 'login.html';
+        } else {
+          errorMessage.textContent = data.error || 'Sign Up failed';
+        }
+      } catch (error) {
+        errorMessage.textContent = 'An error occurred. Please try again.';
+      } finally {
+        signupButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
