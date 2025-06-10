@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Beauty Hub - Home</title>
-    <link rel="stylesheet" href="css/profile.css" />
-</head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Beauty Hub - Home</title>
+        <link rel="stylesheet" href="css/profile.css" />
+        <link rel="stylesheet" href="css/employee-management.css" />
+    </head>
 <body>
     <header>
         <h1>Beauty Hub</h1>
@@ -21,14 +22,53 @@
         <p>Your one-stop solution for managing appointments, employees, inventory, billing, and marketing for salons and spas.</p>
     </section>
     <main>
-        <section id="business-details-section" aria-labelledby="business-details-heading">
-            <h3 id="business-details-heading">Business Details</h3>
-            <p><strong>Business Name:</strong> <span id="business-name"></span></p>
-            <p><strong>Email:</strong> <span id="business-email"></span></p>
-            <p><strong>Address:</strong> <span id="business-address"></span></p>
-            <p><strong>Phone Number:</strong> <span id="business-phone"></span></p>
-            <p><strong>Admin Name:</strong> <span id="admin-name"></span></p>
-            <p><strong>Total Customers:</strong> <span id="total-customers"></span></p>
+        <section id="sales-monitoring" aria-labelledby="sales-monitoring-heading">
+            <h3 id="sales-monitoring-heading">Sales Monitoring</h3>
+            <div id="sales-report">
+                <p>Loading sales report...</p>
+            </div>
+        </section>
+
+        <section id="product-service-posting" aria-labelledby="product-service-posting-heading">
+            <h3 id="product-service-posting-heading">Product and Service Posting</h3>
+            <table id="product-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="product-table-body">
+                    <!-- Product rows will be populated here -->
+                </tbody>
+            </table>
+
+            <h4>Add / Edit Product or Service</h4>
+            <form id="product-form">
+                <input type="hidden" id="product-id" name="product-id" />
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required />
+                <br />
+                <label for="type">Type:</label>
+                <select id="type" name="type" required>
+                    <option value="">--Select Type--</option>
+                    <option value="service">Service</option>
+                    <option value="product">Product</option>
+                </select>
+                <br />
+                <label for="description">Description:</label>
+                <textarea id="description" name="description"></textarea>
+                <br />
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" step="0.01" required />
+                <br />
+                <button type="submit" id="submit-product-button">Add Product/Service</button>
+                <button type="button" id="cancel-product-button" >Cancel</button>
+            </form>
         </section>
     </main>
     <footer>
@@ -69,7 +109,147 @@
         }
       }
 
+      // Employee management functions
+      async function loadEmployees() {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+          const employees = await fetchApi('api/admin/employees', {
+            headers: {
+              'Authorization': 'Bearer ' + token,
+            },
+          });
+          const tbody = document.getElementById('employee-table-body');
+          tbody.innerHTML = '';
+          employees.forEach(emp => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${emp.id}</td>
+              <td>${emp.full_name}</td>
+              <td>${emp.position}</td>
+              <td>${emp.phone || ''}</td>
+              <td>${emp.email || ''}</td>
+              <td>
+                <button data-id="${emp.id}" class="edit-btn">Edit</button>
+                <button data-id="${emp.id}" class="delete-btn">Delete</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+          addEmployeeTableEventListeners();
+        } catch (error) {
+          console.error('Failed to load employees:', error);
+        }
+      }
+
+      function addEmployeeTableEventListeners() {
+        document.querySelectorAll('.edit-btn').forEach(button => {
+          button.addEventListener('click', async (event) => {
+            const id = event.target.getAttribute('data-id');
+            await editEmployee(id);
+          });
+        });
+        document.querySelectorAll('.delete-btn').forEach(button => {
+          button.addEventListener('click', async (event) => {
+            const id = event.target.getAttribute('data-id');
+            if (confirm('Are you sure you want to delete this employee?')) {
+              await deleteEmployee(id);
+            }
+          });
+        });
+      }
+
+      async function editEmployee(id) {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+          const employee = await fetchApi(`api/admin/employees/${id}`, {
+            headers: {
+              'Authorization': 'Bearer ' + token,
+            },
+          });
+          document.getElementById('employee-id').value = employee.id;
+          document.getElementById('full_name').value = employee.full_name;
+          document.getElementById('position').value = employee.position;
+          document.getElementById('phone').value = employee.phone || '';
+          document.getElementById('email').value = employee.email || '';
+          document.getElementById('submit-button').textContent = 'Update Employee';
+          document.getElementById('cancel-button').style.display = 'inline';
+        } catch (error) {
+          console.error('Failed to fetch employee:', error);
+        }
+      }
+
+      async function deleteEmployee(id) {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('No admin token found');
+            return;
+          }
+          await fetchApi(`api/admin/employees/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+            },
+          });
+          await loadEmployees();
+        } catch (error) {
+          console.error('Failed to delete employee:', error);
+        }
+      }
+
+      document.getElementById('employee-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No admin token found');
+          return;
+        }
+        const id = document.getElementById('employee-id').value;
+        const full_name = document.getElementById('full_name').value;
+        const position = document.getElementById('position').value;
+        const phone = document.getElementById('phone').value;
+        const email = document.getElementById('email').value;
+
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `api/admin/employees/${id}` : 'api/admin/employees';
+
+        try {
+          await fetchApi(url, {
+            method,
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ full_name, position, phone, email }),
+          });
+          document.getElementById('employee-form').reset();
+          document.getElementById('employee-id').value = '';
+          document.getElementById('submit-button').textContent = 'Add Employee';
+          document.getElementById('cancel-button').style.display = 'none';
+          await loadEmployees();
+        } catch (error) {
+          console.error('Failed to save employee:', error);
+        }
+      });
+
+      document.getElementById('cancel-button').addEventListener('click', (event) => {
+        event.preventDefault();
+        document.getElementById('employee-form').reset();
+        document.getElementById('employee-id').value = '';
+        document.getElementById('submit-button').textContent = 'Add Employee';
+        document.getElementById('cancel-button').style.display = 'none';
+      });
+
       loadBusinessDetails();
+      loadEmployees();
     </script>
 </body>
 </html>
