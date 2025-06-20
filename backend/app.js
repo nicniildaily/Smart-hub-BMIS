@@ -19,6 +19,10 @@ const allowedOrigins = ['http://localhost:3000', 'http://127.0.0.1:5500', 'http:
 app.use(cors({
   origin: function(origin, callback){
     if(!origin) return callback(null, true);
+    // Allow any localhost with any port
+    if(origin && origin.match(/^http:\/\/localhost:\d+$/)) {
+      return callback(null, true);
+    }
     if(allowedOrigins.indexOf(origin) === -1){
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
