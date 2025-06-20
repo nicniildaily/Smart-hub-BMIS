@@ -4,14 +4,14 @@ const Admins = require('../models/Admins');
 
 async function login(req, res) {
   try {
-    const { email, pin } = req.body;
-    if (!email || !pin) {
-      return res.status(400).json({ error: 'Email and pin are required' });
+    const { phone_number, pin } = req.body;
+    if (!phone_number || !pin) {
+      return res.status(400).json({ error: 'Phone number and pin are required' });
     }
 
-    const admin = await Admins.findOne({ where: { email } });
+    const admin = await Admins.findOne({ where: { phone_number } });
     if (!admin) {
-      return res.status(401).json({ error: 'Invalid email or pin' });
+      return res.status(401).json({ error: 'Invalid phone number or pin' });
     }
 
     // Compare pin with hashed_pin if hashed_pin exists, else compare directly
@@ -23,7 +23,7 @@ async function login(req, res) {
     }
 
     if (!pinMatch) {
-      return res.status(401).json({ error: 'Invalid email or pin' });
+      return res.status(401).json({ error: 'Invalid phone number or pin' });
     }
 
     // Generate JWT token
