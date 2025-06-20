@@ -74,7 +74,7 @@ async function initializeDatabase() {
 
     // To enable database sync, uncomment the following lines:
     // await db_async.sequelize.sync({ force: true }); // Drops and recreates tables
-    // console.log('Database & tables dropped and recreated!');
+    // console.log('Database & tables dropped and recreated!') ;
 
     app.listen(port, () => {
       const interfaces = os.networkInterfaces();
