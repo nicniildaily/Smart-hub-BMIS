@@ -14,11 +14,15 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
-const allowedOrigins = ['http://localhost:5500', 'http://127.0.0.1:5500', 'http://192.168.50.210:3000', 'http://192.168.50.210:5500', 'http://127.0.0.1:5501'];
+const allowedOrigins = ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://192.168.50.210:3000', 'http://192.168.50.210:5500', 'http://127.0.0.1:5501', 'http://192.168.65.210:3000', 'http://192.168.65.210:5000', 'http://192.168.65.210:5500', 'http://127.0.0.1:5503'];
 
 app.use(cors({
   origin: function(origin, callback){
     if(!origin) return callback(null, true);
+    // Allow any localhost with any port
+    if(origin && origin.match(/^http:\/\/localhost:\d+$/)) {
+      return callback(null, true);
+    }
     if(allowedOrigins.indexOf(origin) === -1){
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
@@ -69,6 +73,10 @@ app.use('/api/auth', authRouter);
 app.use('/api/admin/auth', adminAuthRouter);
 const adminRouter = require('./routes/admin');
 app.use('/api/admin', adminRouter);
+
+// Serve frontend static files
+const path = require('path');
+app.use('/frontend', express.static(path.join(__dirname, '../frontend')));
 
 // Basic route for testing
 app.get('/', (req, res) => {
