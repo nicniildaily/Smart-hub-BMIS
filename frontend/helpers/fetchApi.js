@@ -1,4 +1,4 @@
-export const API_URL = "http://localhost:5000/"
+export const API_URL = "http://172.20.10.9:5000/"
 /**
  * Consume an API with default options
  * @param {string} url - the URL to call
